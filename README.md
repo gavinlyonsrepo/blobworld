@@ -23,8 +23,9 @@ Starts with 15 blobs for each of 3 colours, red green and blue
 
 1=absorbs on contact 0=no absorb on contact
 
-| --- | red | green | blue |
-| red | 1 | 1 | 0 |
-| green | 0 | 1 | 1 |
-| blue | 1 | 0 | 1 |
+| xxx   | red | green | blue |
+| ---   | --- | ----  | ---- |
+| red   | 1   | 1     | 0    |
+| green | 0   | 1     | 1    |
+| blue  | 1   | 0     | 1    |
 
