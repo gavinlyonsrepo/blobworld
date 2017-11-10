@@ -34,3 +34,11 @@ class Blob:
             self.y = 0
         elif self.y > self.y_boundary:
             self.y = self.y_boundary
+
+
+def test():
+    """import code"""
+    pass
+
+if __name__ == '__main__':
+    test()
