@@ -76,7 +76,7 @@ GAME_DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("BLOB WORLD!")
 # set the icon catch an error if issue with the file
 try:
-    gameicon = pygame.image.load('images/blobicon.png')
+    gameicon = pygame.image.load('/usr/share/pixmaps/blobicon.png')
     pygame.display.set_icon(gameicon)
 except Exception as error4:
     print("Problem with icon file blobicon.png")
@@ -150,7 +150,7 @@ class GreenBlob(Blob):
 def play_sound(sound_file):
     """function to play sound file"""
     try:
-        start_sound = pygame.mixer.Sound(sound_file)
+        start_sound = pygame.mixer.Sound('/usr/share/sounds/blobworld/' + sound_file)
         pygame.mixer.Sound.play(start_sound)
         pygame.mixer.music.stop()
     except Exception as error1:
@@ -164,7 +164,7 @@ def draw_environment(blob_list):
     blues, reds, greens, kill = Work.handle_collisions(blob_list)
 
     if kill:
-        play_sound("sounds/kill.wav")
+        play_sound("kill.wav")
 
     # set background
     GAME_DISPLAY.fill(BEIGE)
@@ -198,7 +198,7 @@ def draw_environment(blob_list):
 
 def my_quit_func(text):
     """Function to handle exit"""
-    play_sound("sounds/end.wav")
+    play_sound("end.wav")
     Work.my_text_box(text)
     logging.info("blobworld exiting {}".format(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())))
     pygame.quit
@@ -210,7 +210,7 @@ def main():
     """main function loop"""
     pygame.init()
     Work.my_text_box("Hello and Welcome to Blobworld. https://github.com/gavinlyonsrepo/blobworld")
-    play_sound("sounds/start.wav")
+    play_sound("start.wav")
     # create the blob dictionaries
     blue_blobs = dict(enumerate([BlueBlob(WIDTH, HEIGHT-110) for i in range(STARTING_BLUE_BLOBS)]))
     red_blobs = dict(enumerate([RedBlob(WIDTH, HEIGHT-110) for i in range(STARTING_RED_BLOBS)]))
@@ -232,13 +232,13 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
                         pause = True
-                        play_sound("sounds/pause.wav")
+                        play_sound("pause.wav")
                 while pause == 1:
                     for event in pygame.event.get():
                         if event.type == pygame.KEYDOWN:
                             if event.key == pygame.K_p:
                                 pause = False
-                                play_sound("sounds/pause.wav")
+                                play_sound("pause.wav")
 
             # draw env return blobs dictionaries
             blue_blobs, red_blobs, green_blobs = draw_environment([blue_blobs, red_blobs, green_blobs])

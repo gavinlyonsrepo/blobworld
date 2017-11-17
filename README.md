@@ -1,10 +1,11 @@
 Overview
 --------------------------------------------
 * Name: blobworld
+* Program: python 3.6.3
 * Title : This python program will display a pygame based automated blob animation.
 * Description: This python program will display a pygame automated blob simulation.
 where blobs of various colours move and consume others in a "blobworld".
-* Author: Gavin Lyons
+* Author: G. Lyons
 * Source: https://github.com/gavinlyonsrepo/blobworld
 
 
@@ -41,17 +42,20 @@ Press p to pause , q to quit
 Installation
 ---------------------
 
-* Download latest release from github
-* Enter the directory
-* Install using the setup.py file
+Install from Python package index (pypi)
+
+```sh
+pip3 install blob_world.py
+```
 
 Usage
 ----------------
-blobworld can be run in terminal by typing 
 
-blobworld.py
+type in terminal
 
-
+```sh
+blob_world.py
+```
 
 Files and setup
 -------------------------
@@ -63,7 +67,6 @@ blobworld files needed are listed below:
 | blob_work.py| python module containing work functions |
 | blob_class.py | python module dealing with class for controlling the blob |
 | $HOME/.config/blobworld/blobworld.cfg | config file, user made, NOT installed |
-| /usr/share/doc/blobworld/README.md | This readme is also installed |
 | /tmp/bloblogfile.txt | log file |
 
 Config file: The user can create a config file at path in table above.
@@ -113,9 +116,6 @@ Communication
 -----------
 If you should find a bug or you have any other query, 
 please send a report.
-Pull requests, suggestions for improvements
-and new features welcome.
-* Contact: Upstream repo at github site below 
 * Upstream repository: https://github.com/gavinlyonsrepo/blobworld
 
 
