@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name="blob_world.py",
+    name="blobworld",
     version="1.1",
     author="Gavin Lyons",
     author_email="glyons66@hotmail.com",

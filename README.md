@@ -45,7 +45,7 @@ Installation
 Install from Python package index (pypi)
 
 ```sh
-pip3 install blob_world.py
+pip3 install blobworld
 ```
 
 Usage
