@@ -1,5 +1,7 @@
-rpiTempSrc/__pycache__
-rpiTempMon/__pycache__
+blobclass/__pycache__
+blobworld/__pycache__
+blobwork/__pycache__
 dist/
 build/
-rpi_tempmon.py.egg-info/
+.idea/
+blob_world.py.egg-info/

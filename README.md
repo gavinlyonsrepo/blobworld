@@ -2,8 +2,8 @@ Overview
 --------------------------------------------
 * Name: blobworld
 * Title : This python program will display a pygame based automated blob animation.
-* Description: This python program will display a pygame automated blob animation.
-where blobs of various colours move and consume others in a blobworld.
+* Description: This python program will display a pygame automated blob simulation.
+where blobs of various colours move and consume others in a "blobworld".
 * Author: Gavin Lyons
 * Source: https://github.com/gavinlyonsrepo/blobworld
 
@@ -49,7 +49,6 @@ blobworld can be run in terminal by typing
 blobworld.py
 
 
-or by clicking the icon installed under games.
 
 Files and setup
 -------------------------
