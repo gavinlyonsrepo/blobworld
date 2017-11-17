@@ -9,7 +9,7 @@ setup(
     license="GPL",
     keywords="pygame",
     url="https://github.com/gavinlyonsrepo/blobworld",
-    download_url='https://github.com/gavinlyonsrepo/blobworld/archive/1.0.tar.gz',
+    download_url='https://github.com/gavinlyonsrepo/blobworld/archive/1.1.tar.gz',
     packages=['blobworld', 'blobclass', 'blobwork'],
     package_dir={'blobworld': 'blobworld'},
     package_data={'blobworld': ['sounds/*.wav', 'images/*.png']},

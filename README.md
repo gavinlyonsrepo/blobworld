@@ -61,10 +61,10 @@ blobworld files needed are listed below:
 | blob_class.py | python module dealing with class for controlling the blob |
 | $HOME/.config/blobworld/blobworld.cfg | config file, user made, NOT installed |
 | /usr/share/doc/blobworld/README.md | This readme is also installed |
-| /tmp/bloblog.txt | log file |
+| /tmp/bloblogfile.txt | log file |
 
 Config file: The user can create a config file at path in table above.
-The config file is NOT installed by setup. 
+The config file is NOT installed by setup.py. 
 A dummy config file is available in documentation folder at repository
 
 There are three settings. 
@@ -73,11 +73,12 @@ The 3 integer values can be set to zero but sum of values must be between
 1 and 150 
 
 
-Make sure to include the [MAIN] header and all settings just as below or from dummy file.
+Make sure to include the [MAIN] header and all settings just as below or from the dummy file.
 
 Settings:
 
-[MAIN]
+>
+>[MAIN]
 >
 >STARTING_BLUE_BLOBS=18
 >
