@@ -40,7 +40,10 @@ Press p to pause , q to quit
 
 Installation
 ---------------------
-Install using the setup.py file
+
+* Download latest release from github
+* Enter the directory
+* Install using the setup.py file
 
 Usage
 ----------------
