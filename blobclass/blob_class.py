@@ -4,7 +4,10 @@ containing  class with methods to display blobs with move and check bounds
 methods
 """
 
+# ======== IMPORTS ===========
 import random
+
+# ========= CLASS ==========
 
 
 class Blob:
@@ -19,12 +22,14 @@ class Blob:
         self.movement_range = movement_range
 
     def move(self):
+        """ method to move blob"""
         self.move_x = random.randrange(self.movement_range[0], self.movement_range[1])
         self.move_y = random.randrange(self.movement_range[0], self.movement_range[1])
         self.x += self.move_x
         self.y += self.move_y
 
     def check_bounds(self):
+        """ method to check bounds of blob against set boundaries"""
         if self.x < 0:
             self.x = 0
         elif self.x > self.x_boundary:
@@ -40,5 +45,10 @@ def test():
     """import code"""
     pass
 
+# =============== MAIN =============
+
+
 if __name__ == '__main__':
     test()
+
+# =============== END ===============

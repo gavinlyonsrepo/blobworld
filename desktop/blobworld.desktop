@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=BlobWorld
+GenericName=Blob World!
+Comment=Pygame animation. 
+Exec=blobworld.py
+Icon=blobicon
+Categories=Games
+Type=Application
+Terminal=false
