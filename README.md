@@ -48,6 +48,9 @@ Install from Python package index (pypi)
 pip3 install blobworld
 ```
 
+A PKGBUILD is available for arch-based linux users. Program is not 
+yet in AUR.
+
 Usage
 ----------------
 
