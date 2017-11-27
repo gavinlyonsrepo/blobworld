@@ -1,8 +1,8 @@
-from setuptools import setup
+from distutils.core import setup
 
 setup(
     name="blobworld",
-    version="1.1",
+    version="1.1.2",
     author="Gavin Lyons",
     author_email="glyons66@hotmail.com",
     description="pygame automated animation of blobs",

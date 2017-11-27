@@ -21,7 +21,7 @@ import pygame
 
 
 # my modules
-from blob_class import Blob
+from blobclass import blob_class 
 from blobwork import blob_work as Work
 
 # set up the logfile
@@ -85,10 +85,10 @@ except Exception as error4:
 
 # ==================== CLASS SECTION===============================
 
-class BlueBlob(Blob):
+class BlueBlob(blob_class.Blob):
     """ subclass of Blob contains an add method to eat other color blobs"""
     def __init__(self, x_boundary, y_boundary):
-        Blob.__init__(self, BLUE, x_boundary, y_boundary)
+        blob_class.Blob.__init__(self, BLUE, x_boundary, y_boundary)
 
     def __add__(self, other_blob):
         """blue blob method blue  eats red and blue"""
@@ -105,10 +105,10 @@ class BlueBlob(Blob):
             raise Exception('Tried to combine one or multiple blobs of unsupported colors.')
 
 
-class RedBlob(Blob):
+class RedBlob(blob_class.Blob):
     """ subclass of Blob """
     def __init__(self, x_boundary, y_boundary):
-        Blob.__init__(self, RED, x_boundary, y_boundary)
+        blob_class.Blob.__init__(self, RED, x_boundary, y_boundary)
 
     def __add__(self, other_blob):
         """red blob eats red and green"""
@@ -125,10 +125,10 @@ class RedBlob(Blob):
             raise Exception('Tried to combine one or multiple blobs of unsupported colors.')
 
 
-class GreenBlob(Blob):
+class GreenBlob(blob_class.Blob):
     """ subclass of Blob """
     def __init__(self, x_boundary, y_boundary):
-        Blob.__init__(self, GREEN, x_boundary, y_boundary)
+        blob_class.Blob.__init__(self, GREEN, x_boundary, y_boundary)
 
     def __add__(self, other_blob):
         """green blob eats blue and green"""
