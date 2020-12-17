@@ -8,23 +8,6 @@ where blobs of various colours move and consume others in a "blobworld".
 * Author: G. Lyons
 * Source: https://github.com/gavinlyonsrepo/blobworld
 
-
-Table of contents
----------------------------
-
-  * [Overview](#overview)
-  * [Table of contents](#table-of-contents)
-  * [Rules](#Rules)
-  * [Installation](#installation)
-  * [Usage](#usage)
-  * [Files and setup](#files-and-setup)
-  * [Logging](#logging)
-  * [Dependencies](#dependencies)
-  * [See Also](#see-also)
-  * [Communication](#communication)
-  * [History](#history)
-  * [Copyright](#copyright)
-
 Rules
 --------------
 Starts with default 15 blobs for each of 3 colours, red green and blue
@@ -114,23 +97,3 @@ Some functions require dependencies packages to be installed.
 | numpy |  calculate if blobs are in collision |
 | pygame| python game package |
 
-
-Communication
------------
-If you should find a bug or you have any other query, 
-please send a report.
-* Upstream repository: https://github.com/gavinlyonsrepo/blobworld
-
-
-History
-------------------
-* See changelog.md in documentation section for version control history
-
-
-Copyright
----------
-Copyright (C) 2017 Gavin Lyons 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public license published by
-the Free Software Foundation, see LICENSE.md in documentation section 
-for more details
