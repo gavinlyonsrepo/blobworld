@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: blobworld
+Version: 1.2.3
+Summary: pygame automated animation of blobs
+Home-page: https://github.com/gavinlyonsrepo/blobworld
+Author: Gavin Lyons
+Author-email: glyons66@hotmail.com
+License: GPL
+Download-URL: https://github.com/gavinlyonsrepo/blobworld/archive/1.2.tar.gz
+Keywords: pygame
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.10
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+License-File: LICENSE.md
+
+UNKNOWN
+
