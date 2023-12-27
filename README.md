@@ -5,19 +5,7 @@ Overview
 * Description: 
 This python program will display a pygame automated blob simulation.
 where blobs of various colours move and consume others in a "blob world".
-* Author: G. Lyons
 * Source: https://github.com/gavinlyonsrepo/blobworld
-* Linux only
-
-
-Installation
----------------------
-
-Install from Python package index (pypi)
-
-```sh
-pip3 install blobworld --user
-```
 
 Usage
 ----------------
@@ -36,7 +24,6 @@ blobworld files needed are listed below:
 
 A config file will be created with default values on startup
 at $HOME/.config/blobworld. Logging is optional.
-
 
 Dependencies
 -----------------

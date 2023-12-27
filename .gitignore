@@ -5,4 +5,5 @@ dist/
 build/
 .idea/
 blob_world.py.egg-info/
+blobworld.egg-info/
 stuff/
