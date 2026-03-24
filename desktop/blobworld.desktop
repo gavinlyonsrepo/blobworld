@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=blobworld
+GenericName=blobworld
+Comment=pygame demo
+Exec=blobworld
+Icon=blobworld
+Categories=Game;
+Type=Application
+Terminal=false
+Name[en_IE]=blobworld.desktop
