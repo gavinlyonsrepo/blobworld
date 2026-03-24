@@ -351,9 +351,9 @@ def install_desktop_entry() -> tuple[bool, list[str]]:
                     check=True
                 )
             if not os.path.isfile(dest):
-                messages.append(f"Installed: {dest}")
+                messages.append(f"Not Installed: {dest}")
             else:
-                messages.append(f"Already exists, overwritten: {dest}")
+                messages.append(f"Installed: {dest}")
         return True, messages
     except (subprocess.SubprocessError, OSError, KeyError) as e:
         messages.append("Install failed — check network or curl.")

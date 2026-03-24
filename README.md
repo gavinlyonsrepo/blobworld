@@ -1,7 +1,7 @@
 # Blob World
 
 [![Website](https://img.shields.io/badge/Website-Link-blue.svg)](https://gavinlyonsrepo.github.io/)  [![Rss](https://img.shields.io/badge/Subscribe-RSS-yellow.svg)](https://gavinlyonsrepo.github.io//feed.xml)  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/whitelight976)
-[![Python](https://img.shields.io/badge/python-3.10%2B-blue)] [![pygame](https://img.shields.io/badge/pygame-2.1%2B-green)] [![PyPI](https://img.shields.io/pypi/v/blobworld)]
+![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![pygame](https://img.shields.io/badge/pygame-2.1%2B-green) [![PyPI version](https://img.shields.io/pypi/v/blobworld.svg)](https://pypi.org/project/blobworld/)
 
 ## Description
 
@@ -14,7 +14,7 @@ Guide your blue blob through 10 levels of increasing difficulty.
 
 | Path | Purpose |
 | ------ | --------- |
-| `~/.config/blobworld/config.ini` | User configuration file — created on first run with defaults. Edit with any text editor to change screen resolution, player speed, volume, and more. Delete to restore defaults. |
+| `~/.config/blobworld/config.ini` | User configuration file — created on first run with defaults. Edit to change screen resolution, player speed, volume, and more. Delete to restore defaults. |
 | `~/.local/share/blobworld/scores.db` | SQLite highscore database — stores the top 10 scores with name, score, level reached, and time played. |
 | `~/.local/share/icons/blobworld.png` | Desktop icon (installed via in-game DESKTOP menu) |
 | `~/.local/share/applications/blobworld.desktop` | Desktop entry (installed via in-game DESKTOP menu) |
@@ -39,7 +39,12 @@ from GitHub. Once installed the game will appear in your application launcher.
 ### From PyPI (recommended)
 
 ```bash
+pipx install blobworld 
+
+or 
+
 pip install blobworld
+
 ```
 
 ### From source
@@ -54,7 +59,7 @@ pip install -e .
 
 > **Note:** On newer Linux distributions (Ubuntu 23.04+, Fedora 38+) the system
 > Python is externally managed. Always install inside a virtual environment.
-
+> Recommend pipx install
 ---
 
 ## How to Run
