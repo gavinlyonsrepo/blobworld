@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=blob_world
-GenericName=blob_world
-Comment=pygame demo
-Exec=blob_world.py
-Icon=blobicon
-Categories=Game;
-Type=Application
-Terminal=false

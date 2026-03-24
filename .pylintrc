@@ -1,0 +1,14 @@
+[DESIGN]
+max-attributes = 15
+max-args=8
+max-positional-arguments=8
+
+[FORMAT]
+max-line-length = 108
+
+[MASTER]
+extension-pkg-allow-list=numpy,pygame
+
+[MESSAGES CONTROL]
+disable=R0801
+

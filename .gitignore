@@ -1,9 +1,8 @@
-blobclass/__pycache__
 blobworld/__pycache__
-blobwork/__pycache__
 dist/
 build/
 .idea/
 blob_world.py.egg-info/
 blobworld.egg-info/
 stuff/
+.venv/
