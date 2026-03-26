@@ -12,6 +12,10 @@ FPS: int = 60
 TITLE: str = "Blob World"
 FULLSCREEN: bool = False
 
+# --- Game play ---
+DIFFICULT_LEVELS = ("easy", "medium" , "hard")
+DEFAULT_DIFFICULTY = "easy"
+
 # --- Colours (R, G, B) ---
 BLACK      = (0,   0,   0)
 WHITE      = (255, 255, 255)
@@ -23,16 +27,19 @@ COLOUR_GREEN  = (60,  210, 90)
 COLOUR_RED    = (220, 50,  50)
 COLOUR_PURPLE = (160, 60,  220)
 COLOUR_YELLOW = (240, 210, 40)
+COLOUR_ORANGE = (255,140,0)
 
 # --- Blob sizes ---
-BLOB_MIN_RADIUS: int    = 8
-BLOB_MAX_RADIUS: int    = 32
+BLOB_MIN_RADIUS: int    = 6
+BLOB_MAX_RADIUS: int    = 30
 
 PLAYER_START_RADIUS: int = 12
 GREEN_START_RADIUS: int  = 10
 RED_START_RADIUS: int    = 11
-PURPLE_START_RADIUS: int = 14
-YELLOW_START_RADIUS: int = 9
+PURPLE_START_RADIUS: int = 13
+ORANGE_START_RADIUS: int = 15
+YELLOW_START_RADIUS: int = 8
+WHITE_START_RADIUS: int = 8
 
 # --- Player ---
 PLAYER_SPEED: float = 4.0
@@ -41,13 +48,19 @@ PLAYER_SPEED: float = 4.0
 PURPLE_SPEED_MIN: float  = 1.0
 PURPLE_SPEED_MAX: float  = 2.0
 PURPLE_SHRINK: float     = 3.0
-PLAYER_MIN_RADIUS: float = 6.0
+
+# --- Orange ---
+ORANGE_SPEED_MIN: float  = 0.1
+ORANGE_SPEED_MAX: float  = 1.0
+ORANGE_EXPAND: float     = 3.0
 
 # --- Fixed counts ---
 GREEN_COUNT: int  = 15
 RED_COUNT: int = 5
 PURPLE_COUNT: int = 4
+ORANGE_COUNT: int = 2
 YELLOW_COUNT: int = 1
+WHITE_COUNT: int = 1
 
 # --- Flee / chase detection radii ---
 FLEE_RADIUS: float  = 180.0
@@ -57,15 +70,15 @@ CHASE_RADIUS: float = 300.0
 COLLISION_THRESHOLD: float = 0.85
 
 # --- Red clustering ---
-CLUSTER_RADIUS: float = 80.0    # reds attract each other within this distance
-CLUSTER_FORCE: float  = 0.08    # cohesion pull strength
+CLUSTER_RADIUS: float = 80.0
+CLUSTER_FORCE: float  = 0.08
 
-# --- Yellow bonus ---
+# --- bonus ---
 YELLOW_FREEZE_SECONDS: float = 3.0
+WHITE_SHRINK: int = 5
 
-# --- Scoring (per level total = 100) ---
-SCORE_PER_GREEN: int  = 5       # 15 x 5  = 75
-SCORE_PER_YELLOW: int = 25      # 1  x 25 = 25  → total 100 per level x 10 = 1000
+# --- Scoring ---
+SCORE_PER_GREEN: int  = 10
 
 # --- Levels ---
 TOTAL_LEVELS: int = 10

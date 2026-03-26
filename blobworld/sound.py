@@ -29,6 +29,8 @@ def init() -> None:
     _load("end",          "end.wav")
     _load("eat_green",    "eat_green.wav")
     _load("eat_yellow",   "eat_yellow.wav")
+    _load("eat_white",    "eat_white.wav")
+    _load("eat_orange",   "eat_orange.wav")
     _load("eat_purple",   "eat_purple.wav")
     _load("level_end",    "level_end.wav")
     _load("eaten_by_red", "eaten_by_red.wav")

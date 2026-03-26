@@ -28,19 +28,8 @@ _DEFAULTS: dict[str, dict[str, str]] = {
         "fullscreen": str(cfg.FULLSCREEN).lower(),
     },
     "gameplay": {
-        "# blob counts (fixed pools)": "",
-        "green_count":          str(cfg.GREEN_COUNT),
-        "red_count":            str(cfg.RED_COUNT),
-        "purple_count":         str(cfg.PURPLE_COUNT),
-        "# player settings": "",
-        "player_speed":         str(cfg.PLAYER_SPEED),
-        "# how much purple shrinks the player per touch": "",
-        "purple_shrink":        str(cfg.PURPLE_SHRINK),
-        "# seconds reds are frozen after catching yellow": "",
-        "yellow_freeze_seconds": str(cfg.YELLOW_FREEZE_SECONDS),
-        "# scoring": "",
-        "score_per_green":      str(cfg.SCORE_PER_GREEN),
-        "score_per_yellow":     str(cfg.SCORE_PER_YELLOW),
+        "# Difficult level, easy medium or hard": "",
+        "difficulty":    str(cfg.DEFAULT_DIFFICULTY),
     },
     "audio": {
         "# volume range 0.0 to 1.0": "",
@@ -71,19 +60,14 @@ def load() -> None:
 
     # --- gameplay ---
     gameplay = parser["gameplay"] if "gameplay" in parser else {}
-    cfg.GREEN_COUNT           = int(gameplay.get("green_count",            cfg.GREEN_COUNT))
-    cfg.RED_COUNT             = int(gameplay.get("red_count",              cfg.RED_COUNT))
-    cfg.PURPLE_COUNT          = int(gameplay.get("purple_count",           cfg.PURPLE_COUNT))
-    cfg.PLAYER_SPEED          = float(gameplay.get("player_speed",         cfg.PLAYER_SPEED))
-    cfg.PURPLE_SHRINK         = float(gameplay.get("purple_shrink",        cfg.PURPLE_SHRINK))
-    cfg.YELLOW_FREEZE_SECONDS = float(gameplay.get("yellow_freeze_seconds",cfg.YELLOW_FREEZE_SECONDS))
-    cfg.SCORE_PER_GREEN       = int(gameplay.get("score_per_green",        cfg.SCORE_PER_GREEN))
-    cfg.SCORE_PER_YELLOW      = int(gameplay.get("score_per_yellow",       cfg.SCORE_PER_YELLOW))
+    cfg.DEFAULT_DIFFICULTY = gameplay.get("difficulty", str(cfg.DEFAULT_DIFFICULTY)).lower()
 
     # --- audio ---
     audio = parser["audio"] if "audio" in parser else {}
     cfg.MUSIC_VOLUME = float(audio.get("music_volume", 0.5))
     cfg.SFX_VOLUME   = float(audio.get("sfx_volume",   0.8))
+
+    _apply_difficulty()
 
 
 def config_path() -> pathlib.Path:
@@ -91,6 +75,31 @@ def config_path() -> pathlib.Path:
     return _CONFIG_PATH
 
 # Internal helpers
+
+def _apply_difficulty() -> None:
+    """Patch gameplay settings based on the chosen difficulty level."""
+    d = cfg.DEFAULT_DIFFICULTY
+
+    if d == cfg.DIFFICULT_LEVELS[0]:
+        cfg.PLAYER_SPEED          = 4.3
+        cfg.YELLOW_FREEZE_SECONDS = 12.0
+        cfg.WHITE_SHRINK          = 5
+        cfg.SCORE_PER_GREEN       = 3
+    elif d == cfg.DIFFICULT_LEVELS[1]:
+        cfg.PLAYER_SPEED          = 4.2
+        cfg.YELLOW_FREEZE_SECONDS = 6.0
+        cfg.WHITE_SHRINK          = 6
+        cfg.SCORE_PER_GREEN       = 6
+    elif d == cfg.DIFFICULT_LEVELS[2]:
+        cfg.PLAYER_SPEED          = 4.1
+        cfg.YELLOW_FREEZE_SECONDS = 3.0
+        cfg.WHITE_SHRINK          = 7
+        cfg.SCORE_PER_GREEN       = 10
+    else:
+        print(f"[config] unknown difficulty '{d}', defaulting to easy")
+        print(cfg.DIFFICULT_LEVELS)
+        cfg.DEFAULT_DIFFICULTY    = "easy"
+        _apply_difficulty()
 
 def _write_defaults() -> None:
     """Write a commented default config file to disk."""

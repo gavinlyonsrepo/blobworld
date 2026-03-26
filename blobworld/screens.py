@@ -14,6 +14,7 @@ from blobworld import settings as cfg
 from blobworld import highscores as hs
 from blobworld import sound
 from blobworld.levels import TOTAL_LEVELS
+from blobworld.config import _CONFIG_PATH
 
 
 def _centre(surface: pygame.Surface, text: str, font: pygame.font.Font,
@@ -40,7 +41,6 @@ def show_splash(screen: pygame.Surface, clock: pygame.time.Clock) -> str:
     Returns 'menu'.
     """
     art = _load_image("title.jpg")       # image 1 — with BLOB WORLD text
-
     # If image missing just skip straight to menu
     if art is None:
         return "menu"
@@ -49,10 +49,8 @@ def show_splash(screen: pygame.Surface, clock: pygame.time.Clock) -> str:
     hold_frames     = cfg.FPS * 3        # hold for 3 seconds
     total_frames    = fade_in_frames + hold_frames
     frame           = 0
-
     overlay = pygame.Surface((cfg.SCREEN_W, cfg.SCREEN_H))
     overlay.fill((0, 0, 0))
-
     hint_font = pygame.font.SysFont("monospace", 20)
 
     while frame < total_frames:
@@ -63,18 +61,15 @@ def show_splash(screen: pygame.Surface, clock: pygame.time.Clock) -> str:
                 return "menu"            # any key skips
 
         screen.blit(art, (0, 0))
-
         # Fade in: alpha goes 255 → 0 over FADE_IN_FRAMES
         if frame < fade_in_frames:
             alpha = int(255 * (1 - frame / fade_in_frames))
             overlay.set_alpha(alpha)
             screen.blit(overlay, (0, 0))
-
         # Show "press any key" hint once fully visible
         if frame >= fade_in_frames:
             _centre(screen, "press any key to continue",
                     hint_font, cfg.SCREEN_H - 40, (180, 180, 200))
-
         pygame.display.flip()
         clock.tick(cfg.FPS)
         frame += 1
@@ -82,16 +77,14 @@ def show_splash(screen: pygame.Surface, clock: pygame.time.Clock) -> str:
     return "menu"
 
 
-
-
 def show_menu(screen: pygame.Surface, clock: pygame.time.Clock) -> str:
     """
-    Main menu — image 2 as background (no title text, dark sky at top)
+    Main menu — image 2 as background (no title text)
     """
     title_font = pygame.font.SysFont("monospace", 36, bold=True)
     hint_font  = pygame.font.SysFont("monospace", 20)
     bg = _load_image("menu_bg.jpg")      # image 2 — characters, no title
-    options  = ["PLAY", "HIGH SCORES", "HELP", "DESKTOP", "ABOUT", "QUIT"]
+    options  = ["PLAY", "HIGH SCORES", "SETTINGS", "HELP", "ABOUT", "QUIT"]
     selected = 0
 
     while True:
@@ -108,9 +101,9 @@ def show_menu(screen: pygame.Surface, clock: pygame.time.Clock) -> str:
                     actions = {
                         "PLAY": lambda: "play",
                         "HIGH SCORES": lambda: show_leaderboard(screen, clock),
+                        "SETTINGS": lambda: show_settings(screen, clock),
                         "HELP": lambda: show_help(screen, clock),
                         "ABOUT": lambda: show_about(screen, clock),
-                        "DESKTOP": lambda: show_desktop(screen, clock),
                         "QUIT": lambda: "quit",
                     }
                     result = actions[choice]()
@@ -143,24 +136,23 @@ def _draw_menu_panel(surface, panel_x, panel_y, options, selected, font): # pyli
             surface.blit(highlight_bar, (panel_x, panel_y + 10 + i * 60))
         _centre(surface, option, font, panel_y + 18 + i * 60, colour)
 
-def show_help(screen: pygame.Surface, clock: pygame.time.Clock) -> None:
+def show_help(screen: pygame.Surface, clock: pygame.time.Clock) -> None: # pylint: disable=too-many-locals
     """ Help screen — controls and blob guide """
     title_font   = pygame.font.SysFont("monospace", 40, bold=True)
-    section_font = pygame.font.SysFont("monospace", 22, bold=True)
-    body_font    = pygame.font.SysFont("monospace", 20)
+    section_font = pygame.font.SysFont("monospace", 20, bold=True)
+    body_font    = pygame.font.SysFont("monospace", 18)
     hint_font    = pygame.font.SysFont("monospace", 18)
-
     bg = _load_image("menu_bg.jpg")
-
     # Blob legend: (colour, label, description)
     blob_guide = [
-        ((80,  140, 255), "YOU  (BLUE)",   "Eat green blobs to grow. Avoid red."),
-        ((60,  210,  90), "GREEN",          "Your prey — eat all 15 to complete level."),
-        ((220,  50,  50), "RED",            "Hunts you. One touch = game over."),
-        ((160,  60, 220), "PURPLE",         "Wanderer — shrinks you on contact."),
-        ((240, 210,  40), "YELLOW  ★",     "Catch it: +25 pts, freezes reds 3 sec."),
+        ((80,  140, 255), "BLUE (You)", "Eat green blobs to grow. Avoid red."),
+        ((60,  210,  90), "GREEN",      "Your prey — eat all 15 to complete level."),
+        ((220,  50,  50), "RED",        "Hunts you. One touch = game over."),
+        ((160,  60, 220), "PURPLE",     "Wanderer — shrinks you on contact."),
+        ((255, 140,   0), "ORANGE",     "Wanderer — expands you on contact."),
+        ((240, 210,  40), "YELLOW",     "Catch it: freezes reds."),
+        ((255, 255, 255), "WHITE",      "Catch it: shrinks reds."),
     ]
-
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -168,52 +160,42 @@ def show_help(screen: pygame.Surface, clock: pygame.time.Clock) -> None:
             if event.type == pygame.KEYDOWN and event.key in (
                     pygame.K_ESCAPE, pygame.K_RETURN):
                 return
-
         if bg:
             screen.blit(bg, (0, 0))
         else:
             screen.fill(cfg.DARK_BG)
-
         overlay = pygame.Surface((cfg.SCREEN_W, cfg.SCREEN_H), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 172))
         screen.blit(overlay, (0, 0))
-
-        _centre(screen, "HOW TO PLAY", title_font, 28, (80, 200, 120))
-
+        _centre(screen, "HOW TO PLAY", title_font, 20, (80, 200, 120))
         # --- Controls ---
-        _centre(screen, "CONTROLS", section_font, 85, (240, 210, 40))
+        _centre(screen, "CONTROLS", section_font, 105, (240, 210, 40))
         controls = [
             "WASD  or  Arrow Keys — move your blob",
-            "P — pause / unpause",
-            "ESC — return to menu",
+            "P — pause / unpause ESC — return to menu",
         ]
         for i, line in enumerate(controls):
-            _centre(screen, line, body_font, 114 + i * 28, cfg.HUD_COLOUR)
-
+            _centre(screen, line, body_font, 125 + i * 18, cfg.HUD_COLOUR)
         # --- Objective ---
-        _centre(screen, "OBJECTIVE", section_font, 210, (240, 210, 40))
-        _centre(screen, "Eat all 15 GREEN blobs to complete each level.", body_font, 240, cfg.HUD_COLOUR)
-        _centre(screen, "Perfect score of 1000 pts.", body_font, 268, cfg.HUD_COLOUR)
-
+        _centre(screen, "OBJECTIVE", section_font, 190, (220, 210, 40))
+        _centre(screen, "Eat all 15 GREEN blobs to complete each level.", body_font, 210, cfg.HUD_COLOUR)
+        _centre(screen, "Perfect score of 1500 pts.", body_font, 230, cfg.HUD_COLOUR)
         # --- Scoring ---
-        _centre(screen, "SCORING", section_font, 308, (240, 210, 40))
-        _centre(screen, "Green blob = 5 pts     Yellow blob = 25 pts     100 pts per level"\
-                , body_font, 336, cfg.HUD_COLOUR)
-
+        _centre(screen, "SCORING - Hard mode", section_font, 260, (240, 210, 40))
+        _centre(screen, "Green = 10,  150 pts per level"\
+                , body_font, 280, cfg.HUD_COLOUR)
         # --- Blob guide ---
-        _centre(screen, "BLOBS", section_font, 376, (240, 210, 40))
+        _centre(screen, "BLOBS", section_font, 320, (240, 210, 40))
         for i, (colour, label, desc) in enumerate(blob_guide):
-            y = 404 + i * 46
+            y = 360 + i * 46
             # coloured circle indicator
-            pygame.draw.circle(screen, colour, (cfg.SCREEN_W // 2 - 340, y + 10), 10)
+            pygame.draw.circle(screen, colour, (cfg.SCREEN_W // 2 - 320, y + 10), 10)
             label_surf = section_font.render(f"{label:<16}", True, colour)
             desc_surf  = body_font.render(desc, True, cfg.HUD_COLOUR)
-            screen.blit(label_surf, (cfg.SCREEN_W // 2 - 320, y))
-            screen.blit(desc_surf,  (cfg.SCREEN_W // 2 - 320 + label_surf.get_width() + 10, y + 2))
-
+            screen.blit(label_surf, (cfg.SCREEN_W // 2 - 300, y))
+            screen.blit(desc_surf,  (cfg.SCREEN_W // 2 - 300 + label_surf.get_width() + 10, y + 2))
         _centre(screen, "ESC / ENTER to return", hint_font,
                 cfg.SCREEN_H - 30, (100, 100, 140))
-
         pygame.display.flip()
         clock.tick(cfg.FPS)
 
@@ -232,27 +214,22 @@ def show_about(screen: pygame.Surface, clock: pygame.time.Clock) -> None:
             if event.type == pygame.KEYDOWN and event.key in (
                     pygame.K_ESCAPE, pygame.K_RETURN):
                 return
-
         if bg:
             screen.blit(bg, (0, 0))
         else:
             screen.fill(cfg.DARK_BG)
-
         # Dark overlay so text is readable over the art
         overlay = pygame.Surface((cfg.SCREEN_W, cfg.SCREEN_H), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 160))
         screen.blit(overlay, (0, 0))
-
         _centre(screen, "ABOUT", title_font, 40, (80, 200, 120))
 
         lines = [
             ("Blob World", True,  (240, 210,  40)),
             (f"Version  {__version__}", False, cfg.HUD_COLOUR),
             ("", False, cfg.HUD_COLOUR),
-            ("A pygame blob survival game.", False, cfg.HUD_COLOUR),
-            ("Eat the green blobs. Survive the red ones.", False, cfg.HUD_COLOUR),
-            ("10 levels of increasing difficulty.", False, cfg.HUD_COLOUR),
-            ("", False, cfg.HUD_COLOUR),
+            ("On planet K2-18b, Life finds a way.", False, cfg.HUD_COLOUR),
+            ("A survival game.", False, cfg.HUD_COLOUR),
             ("Author :  Gavin Lyons", False, cfg.HUD_COLOUR),
             ("License:  GPL-3.0", False, cfg.HUD_COLOUR),
             ("Source :  github.com/gavinlyonsrepo/blobworld", False, (100, 160, 255)),
@@ -267,19 +244,19 @@ def show_about(screen: pygame.Surface, clock: pygame.time.Clock) -> None:
 
         _centre(screen, "ESC / ENTER to return", hint_font,
         cfg.SCREEN_H - 30, (100, 100, 140))
-
         pygame.display.flip()
         clock.tick(cfg.FPS)
 
-def show_desktop(screen, clock):
-    """ Display install desktop button option to user"""
+def show_settings(screen, clock):
+    """ 
+    Settings note and 
+    display install desktop button option to user
+    """
     title_font  = pygame.font.SysFont("monospace", 48, bold=True)
     hint_font   = pygame.font.SysFont("monospace", 18)
     btn_font    = pygame.font.SysFont("monospace", 22, bold=True)
-
     btn_rect    = pygame.Rect(0, 0, 320, 50)
     btn_rect.center = (cfg.SCREEN_W // 2, 480)
-
     messages    = []
     success     = None
 
@@ -297,11 +274,12 @@ def show_desktop(screen, clock):
                 success, messages = install_desktop_entry()
 
         screen.fill(cfg.DARK_BG)
-        _centre(screen, "DESKTOP Entry install", title_font, 60, (80, 200, 120))
-
+        _centre(screen, "Settings", title_font, 60, (80, 200, 120))
+        set_text = f"Settings are in the config.ini file at {_CONFIG_PATH}"
+        _centre(screen, set_text, btn_font,
+        150, (100, 100, 140))
         # Install button
         _draw_button(screen, "INSTALL DESKTOP ENTRY", btn_rect, btn_font, hover)
-
         # Feedback messages after install
         if messages:
             col = (80, 200, 120) if success else (220, 60, 60)
@@ -350,10 +328,10 @@ def install_desktop_entry() -> tuple[bool, list[str]]:
                     ["curl", "-s", "--fail", "-o", dest, my_url],
                     check=True
                 )
-            if not os.path.isfile(dest):
-                messages.append(f"Not Installed: {dest}")
-            else:
+            if os.path.isfile(dest):
                 messages.append(f"Installed: {dest}")
+            else:
+                messages.append(f"Not Installed: {dest}")
         return True, messages
     except (subprocess.SubprocessError, OSError, KeyError) as e:
         messages.append("Install failed — check network or curl.")
@@ -498,8 +476,7 @@ def show_leaderboard(screen: pygame.Surface, clock: pygame.time.Clock,
 
         screen.fill(cfg.DARK_BG)
         _centre(screen, "HIGH SCORES", title_font, 30, (220, 200, 40))
-
-        header = f"{'#':>2}  {'NAME':<14}{'SCORE':>7}  {'LVL':>3}  {'TIME':>6}  {'DATE'}"
+        header = "#   NAME                SCORE    LVL   TIME   DATE         MODE"
         _centre(screen, header, head_font, 100, (140, 140, 180))
         pygame.draw.line(screen, (60, 60, 90),
                          (60, 126), (cfg.SCREEN_W - 60, 126), 1)
@@ -510,9 +487,9 @@ def show_leaderboard(screen: pygame.Surface, clock: pygame.time.Clock,
             for entry in entries:
                 y      = 136 + entry.rank * 38
                 colour = (220, 200, 40) if entry.name == highlight_name else cfg.HUD_COLOUR
-                line   = (f"{entry.rank:>2}.  {entry.name:<14}"
-                          f"{entry.score:>7}  {entry.level_reached:>3}  "
-                          f"{entry.time_display:>6}  {entry.date[:10]}")
+                line = (f"{entry.rank:>2}.  {entry.name:<14}"
+                        f"{entry.score:>7}  {entry.level_reached:>3}  "
+                        f"{entry.time_display:>6}  {entry.date[:10]} {entry.difficulty}")
                 _centre(screen, line, row_font, y, colour)
 
         _centre(screen, "ESC / ENTER to return", hint_font,

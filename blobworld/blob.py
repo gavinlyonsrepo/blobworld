@@ -151,6 +151,10 @@ class RedBlob(Blob):
         self.frozen = True
         self.frozen_timer = seconds
 
+    def shrink(self, amount: float) -> None:
+        """Shrink the player blob by the given amount (clamped to minimum size)."""
+        self.radius = amount
+
     def update(self, player: "PlayerBlob | None" = None,
            peers: "Sequence[Blob] | None" = None) -> None:
         if self.delay > 0:
@@ -221,9 +225,32 @@ class PurpleBlob(Blob):
         self.y += self.vy
         self._bounce()
 
+class OrangeBlob(Blob):
+    """Orange blob — wanders very slowly expands player on contact.
+    also takes 5 points"""
+
+    def __init__(self) -> None:
+        super().__init__(
+            x=random.uniform(60, cfg.SCREEN_W - 60),
+            y=random.uniform(60, cfg.SCREEN_H - 60),
+            radius=cfg.ORANGE_START_RADIUS,
+            colour=cfg.COLOUR_ORANGE,
+        )
+        speed = random.uniform(cfg.ORANGE_SPEED_MIN, cfg.ORANGE_SPEED_MAX)
+        angle = random.uniform(0, 2 * math.pi)
+        self.vx = math.cos(angle) * speed
+        self.vy = math.sin(angle) * speed
+
+    def update(
+        self, player: "PlayerBlob | None" = None, peers: "list[Blob] | None" = None
+    ) -> None:
+        self._wander(nudge=0.07)
+        self.x += self.vx
+        self.y += self.vy
+        self._bounce()
 
 class YellowBlob(Blob):
-    """Yellow blob — very fast, flees the player, and freezes reds when eaten."""
+    """Yellow blob — fast, flees the player, and freezes reds when eaten."""
 
     def __init__(self, level_cfg: "LevelConfig") -> None:
         super().__init__(
@@ -246,6 +273,43 @@ class YellowBlob(Blob):
             self._set_away(player, self._lv.yellow_flee_speed)
         else:
             self._wander(nudge=0.05)
+
+        self.x += self.vx
+        self.y += self.vy
+        self._bounce()
+
+    def draw(self, surface: pygame.Surface) -> None:
+        r = int(self.radius)
+        pygame.draw.circle(surface, self.colour, (int(self.x), int(self.y)), r)
+
+
+class WhiteBlob(Blob):
+    """
+    White blob — very fast, flees the player, and skrinks reds when eaten
+    speed = yellow blob level config speeds + 0.5
+    """
+
+    def __init__(self, level_cfg: "LevelConfig") -> None:
+        super().__init__(
+            x=random.uniform(60, cfg.SCREEN_W - 60),
+            y=random.uniform(60, cfg.SCREEN_H - 60),
+            radius=cfg.WHITE_START_RADIUS,
+            colour=cfg.WHITE,
+        )
+        self._lv = level_cfg
+
+        speed = random.uniform(level_cfg.yellow_speed_min+0.5, level_cfg.yellow_speed_max+0.5)
+        angle = random.uniform(0, 2 * math.pi)
+        self.vx = math.cos(angle) * speed
+        self.vy = math.sin(angle) * speed
+
+    def update(
+        self, player: "PlayerBlob | None" = None, peers: "list[Blob] | None" = None
+    ) -> None:
+        if player and self.dist_to(player) < cfg.FLEE_RADIUS:
+            self._set_away(player,  self._lv.yellow_flee_speed+0.5)
+        else:
+            self._wander(nudge=0.02)
 
         self.x += self.vx
         self.y += self.vy
@@ -294,7 +358,11 @@ class PlayerBlob(Blob):
 
     def shrink(self, amount: float) -> None:
         """Shrink the player blob by the given amount (clamped to minimum size)."""
-        self.radius = max(cfg.PLAYER_MIN_RADIUS, self.radius - amount)
+        self.radius = max(cfg.BLOB_MIN_RADIUS, self.radius - amount)
+
+    def expand(self, amount: float) -> None:
+        """Expand the player blob by the given amount (clamped to maximum size)."""
+        self.radius = min(cfg.BLOB_MAX_RADIUS, self.radius + amount)
 
     def draw(self, surface: pygame.Surface) -> None:
         r = int(self.radius)

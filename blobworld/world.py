@@ -11,7 +11,7 @@ import pygame
 from blobworld import settings as cfg
 from blobworld import sound
 from blobworld.levels import get_level, TOTAL_LEVELS
-from blobworld.blob import PlayerBlob, GreenBlob, RedBlob, PurpleBlob, YellowBlob
+from blobworld.blob import PlayerBlob, OrangeBlob, GreenBlob, RedBlob, PurpleBlob, YellowBlob, WhiteBlob
 
 
 class World:
@@ -30,6 +30,8 @@ class World:
         self.reds:    list[RedBlob]    = []
         self.purples: list[PurpleBlob] = []
         self.yellows: list[YellowBlob] = []
+        self.whites:  list[WhiteBlob]  = []
+        self.oranges: list[OrangeBlob] = []
         self._advance_pending: bool = False
         self._load_level(self.current_level)
 
@@ -39,8 +41,11 @@ class World:
         self.greens  : list[GreenBlob]  = [GreenBlob(lv)  for _ in range(cfg.GREEN_COUNT)]
         self.reds    : list[RedBlob]    = [RedBlob(lv)    for _ in range(lv.red_count)]
         self.purples : list[PurpleBlob] = [PurpleBlob()   for _ in range(cfg.PURPLE_COUNT)]
+        self.oranges : list[OrangeBlob] = [OrangeBlob()   for _ in range(cfg.ORANGE_COUNT)]
         self.yellows : list[YellowBlob] = [YellowBlob(lv) for _ in range(cfg.YELLOW_COUNT)]
+        self.whites  : list[WhiteBlob]  = [WhiteBlob(lv) for _ in range(cfg.WHITE_COUNT)]
         self._purple_cooldown: dict[int, int] = {}
+        self._orange_cooldown: dict[int, int] = {}
         self._advance_pending: bool = False
         self.level_start_time = time.time()
 
@@ -71,14 +76,23 @@ class World:
         for pu in self.purples:
             if pu.alive:
                 pu.update(player=p)
+        for org in self.oranges:
+            if org.alive:
+                org.update(player=p)
         for y in self.yellows:
             if y.alive:
                 y.update(player=p)
+        for w in self.whites:
+            if w.alive:
+                w.update(player=p)
 
         self._resolve_player_green()
         self._resolve_player_red()
         self._resolve_player_purple()
+        self._resolve_player_orange()
         self._resolve_player_yellow()
+        self._resolve_player_white()
+        self._tick_orange_cooldowns()
         self._tick_purple_cooldowns()
         self._cull_dead()
         self._check_level_complete()
@@ -117,28 +131,69 @@ class World:
                 pu.alive = False
                 sound.play("eat_purple")
 
+    def _resolve_player_orange(self) -> None:
+        p = self.player
+        for org in self.oranges:
+            if not org.alive:
+                continue
+            pid = id(org)
+            if self._orange_cooldown.get(pid, 0) > 0:
+                continue
+            if p.collides_with(org):
+                p.expand(cfg.ORANGE_EXPAND)
+                self._orange_cooldown[pid] = cfg.FPS
+                org.alive = False
+                sound.play("eat_orange")
+
     def _resolve_player_yellow(self) -> None:
         p = self.player
         for y in self.yellows:
             if y.alive and p.collides_with(y):
                 y.alive = False
-                p.score += cfg.SCORE_PER_YELLOW
                 sound.play("eat_yellow")
                 for r in self.reds:
                     r.freeze(cfg.YELLOW_FREEZE_SECONDS)
 
+    def _resolve_player_white(self) -> None:
+        p = self.player
+        for w in self.whites:
+            if w.alive and p.collides_with(w):
+                w.alive = False
+                sound.play("eat_white")
+                for r in self.reds:
+                    r.shrink(cfg.WHITE_SHRINK)
+
     # Helpers
 
     def _tick_purple_cooldowns(self) -> None:
+        """
+        Decrement per-purple-blob cooldown timers by one tick each frame,
+        removing entries that have expired. Prevents _resolve_player_purple
+        from processing the same collision repeatedly before a blob is
+        cleaned up.
+        """
         for pid in list(self._purple_cooldown):
             self._purple_cooldown[pid] -= 1
             if self._purple_cooldown[pid] <= 0:
                 del self._purple_cooldown[pid]
 
+    def _tick_orange_cooldowns(self) -> None:
+        """
+        Decrement per-orange-blob cooldown timers by one tick each frame,
+        removing entries that have expired. Prevents _resolve_player_orange
+        from processing the same collision repeatedly before a blob is
+        cleaned up.
+        """
+        for pid in list(self._orange_cooldown):
+            self._orange_cooldown[pid] -= 1
+            if self._orange_cooldown[pid] <= 0:
+                del self._orange_cooldown[pid]
+
     def _cull_dead(self) -> None:
         self.greens  = [b for b in self.greens  if b.alive]
         self.yellows = [b for b in self.yellows if b.alive]
         self.purples = [b for b in self.purples if b.alive]
+        self.whites =  [b for b in self.whites if b.alive]
 
     def _check_level_complete(self) -> None:
         if self.greens_remaining == 0:
@@ -163,11 +218,14 @@ class World:
     def _end_game(self, won: bool) -> None:
         self.won         = won
         self.game_over   = True
-        self.final_score = self.total_score + self.player.score
+        self.final_score = self.total_score
 
     def draw(self, surface: pygame.Surface) -> None:
         """ Draw level """
         for b in self.purples:
+            if b.alive:
+                b.draw(surface)
+        for b in self.oranges:
             if b.alive:
                 b.draw(surface)
         for b in self.greens:
@@ -177,6 +235,9 @@ class World:
             if b.alive:
                 b.draw(surface)
         for b in self.yellows:
+            if b.alive:
+                b.draw(surface)
+        for b in self.whites:
             if b.alive:
                 b.draw(surface)
         self.player.draw(surface)

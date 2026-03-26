@@ -40,7 +40,7 @@ def _show_menu():
         if state == "splash":
             state = screens.show_splash(screen, clock)
         elif state == "menu":
-            sound.play_music("eight-Bit.ogg")
+            sound.play_music("eight_bit.ogg")
             state = screens.show_menu(screen, clock)
             sound.stop_music()
         elif state == "play":

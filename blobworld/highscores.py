@@ -20,6 +20,7 @@ class ScoreEntry:
     level_reached: int
     time_seconds:  float
     date:          str
+    difficulty:    str
     rank:          int = 0
 
     @property
@@ -44,7 +45,8 @@ def init_db() -> None:
                 score         INTEGER NOT NULL,
                 level_reached INTEGER NOT NULL DEFAULT 1,
                 time_seconds  REAL    NOT NULL DEFAULT 0,
-                date          TEXT    NOT NULL
+                date          TEXT    NOT NULL,
+                difficulty    TEXT    NOT NULL
             )
         """)
 
@@ -57,9 +59,9 @@ def save_score(name: str, score: int,
     date = datetime.now().strftime("%Y-%m-%d %H:%M")
     with _connect() as con:
         con.execute(
-            "INSERT INTO scores (name, score, level_reached, time_seconds, date) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (name, score, level_reached, time_seconds, date),
+            "INSERT INTO scores (name, score, level_reached, time_seconds, date, difficulty) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (name, score, level_reached, time_seconds, date, cfg.DEFAULT_DIFFICULTY),
         )
         con.execute("""
             DELETE FROM scores WHERE id NOT IN (
@@ -72,13 +74,13 @@ def get_top_scores(limit: int = cfg.MAX_HIGH_SCORES) -> list[ScoreEntry]:
     """ Read the high scores database for display """
     with _connect() as con:
         rows = con.execute(
-            "SELECT name, score, level_reached, time_seconds, date "
+            "SELECT name, score, level_reached, time_seconds, date, difficulty "
             "FROM scores ORDER BY score DESC LIMIT ?",
             (limit,),
         ).fetchall()
     return [
         ScoreEntry(name=r[0], score=r[1], level_reached=r[2],
-                   time_seconds=r[3], date=r[4], rank=i + 1)
+                   time_seconds=r[3], date=r[4], difficulty=r[5], rank=i + 1)
         for i, r in enumerate(rows)
     ]
 
